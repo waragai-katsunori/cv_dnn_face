@@ -6,7 +6,7 @@ Sample scripts using OpenCV DNN based face detection and recogniton.
 - Python 3.8.10
 
 ## requirements
-- opencv-python >= 4.5.4
+- opencv-python >= 4.5.4 (checked with 4.5.4)
 - numpy
 
 ## model files
