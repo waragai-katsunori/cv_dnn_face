@@ -9,11 +9,13 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="face_recognizer")
-    parser.add_argument("img_file", help="image_file or camera_number")
+    parser.add_argument("img_file", help="image_file, movie_file or camera_number")
     args = parser.parse_args()
 
     name = args.img_file
     if Path(name).suffix in (".jpg", ".jpeg", ".png"):
+        capture = cv2.VideoCapture(name)
+    elif Path(name).suffix in (".webm", ".mp4", ".avi"):
         capture = cv2.VideoCapture(name)
     else:
         num = int(args.img_file)

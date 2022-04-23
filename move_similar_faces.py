@@ -26,33 +26,36 @@ def slim_by_distance(target_dir: Path, dst_dir: Path, th: float, recursive=False
     encodings_list = []
     for i, p in enumerate(names):
         print(p)
-        img = cv2.imread(str(p))
-        if img is None:
-            continue
-        height, width, _ = img.shape
-        result, faces = face_detector.detect(img)
-        faces = faces if faces is not None else []
+        try:
+            img = cv2.imread(str(p))
+            if img is None:
+                continue
+            height, width, _ = img.shape
+            result, faces = face_detector.detect(img)
+            faces = faces if faces is not None else []
 
-        encs = [
-            face_recognizer.feature(face_recognizer.alignCrop(img, face))
-            for face in faces
-        ]
-        #    print(encs)
-        if encs:
-            print(encs[0].shape)
-            dist = [1.0 - face_recognizer.match(e, encs[0]) for e in encodings_list]
-            print(p, len(dist) * "*")
-            if len(dist) == 0:
-                encodings_list.append(encs[0])
-                name_list.append(p)
-            else:
-                min_dist = min(dist)
-                if min_dist > th:
+            encs = [
+                face_recognizer.feature(face_recognizer.alignCrop(img, face))
+                for face in faces
+            ]
+            #    print(encs)
+            if encs:
+                print(encs[0].shape)
+                dist = [1.0 - face_recognizer.match(e, encs[0]) for e in encodings_list]
+                print(p, len(dist) * "*")
+                if len(dist) == 0:
                     encodings_list.append(encs[0])
                     name_list.append(p)
                 else:
-                    print("skip", p)
-                    shutil.move(str(p), str(dst_dir))
+                    min_dist = min(dist)
+                    if min_dist > th:
+                        encodings_list.append(encs[0])
+                        name_list.append(p)
+                    else:
+                        print("skip", p)
+                        shutil.move(str(p), str(dst_dir))
+        except cv2.error:
+            pass
 
 
 if __name__ == "__main__":
