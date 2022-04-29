@@ -26,7 +26,7 @@ usage: detector.py [-h] img_file
 face_recognizer
 
 positional arguments:
-  img_file    image_file or camera_number
+  img_file    image_file, movie_file or camera_number
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -45,7 +45,7 @@ usage: recognizer.py [-h] img_file
 face_recognizer
 
 positional arguments:
-  img_file    image_file or camera_number
+  img_file    image_file, video_file or camera_number
 
 optional arguments:
   -h, --help  show this help message and exit
@@ -117,15 +117,15 @@ optional arguments:
 This will generate feature data file (*.npy), and face image without margin (*.jpg)
 
 ```commandline
-
 $ python generate_aligned_faces.py -h
-usage: generate aligned face images from an image [-h] image
+usage: generate aligned face images from an image [-h] [--recursive] image
 
 positional arguments:
-  image       input image file path (./image.jpg)
+  image        input image file path (./image.jpg)
 
 optional arguments:
-  -h, --help  show this help message and exit
+  -h, --help   show this help message and exit
+  --recursive
 ```
 
 Note:

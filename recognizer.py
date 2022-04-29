@@ -27,11 +27,13 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="face_recognizer")
-    parser.add_argument("img_file", help="image_file or camera_number")
+    parser.add_argument("img_file", help="image_file, video_file or camera_number")
     args = parser.parse_args()
 
     name = args.img_file
     if Path(name).suffix in (".jpg", ".jpeg", ".png"):
+        capture = cv2.VideoCapture(name)
+    elif Path(name).suffix in (".mp4", ".avi", ".webm"):
         capture = cv2.VideoCapture(name)
     else:
         num = int(args.img_file)
@@ -45,6 +47,13 @@ def main():
         (file.stem, np.load(file))
         for file in (BASE_DIR / "aligned_faces").glob("*.npy")
     ]
+
+    face_db2 = [
+        (file.parent.name, np.load(file))
+        for file in (BASE_DIR / "aligned_faces").glob("*/*.npy")
+    ]
+
+    face_db.extend(face_db2)
 
     face_detector = YunetFaceDetector()
 
