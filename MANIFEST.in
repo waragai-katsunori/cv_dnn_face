@@ -1,0 +1,2 @@
+include cv_dnn_face/model/yunet.onnx
+include cv_dnn_face/model/face_recognizer_fast.onnx

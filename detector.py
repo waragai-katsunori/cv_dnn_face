@@ -2,7 +2,7 @@ from pathlib import Path
 
 import cv2
 
-from common import YunetFaceDetector, parse_yunet_face
+from cv_dnn_face import YunetFaceDetector
 
 
 def main():
@@ -29,27 +29,27 @@ def main():
     cv2.namedWindow("face detection", cv2.WINDOW_NORMAL)
 
     while True:
-        result, image = capture.read()
+        result, img = capture.read()
         if result is False:
             cv2.waitKey(0)
             break
 
-        image = cv2.flip(image, 1)
+        img = cv2.flip(img, 1)
 
-        _, faces = face_detector.detect(image)
+        _, faces = face_detector.detect(img)
         faces = faces if faces is not None else []
         # draw detections
         for face in faces:
-            box, landmarks, confidence = parse_yunet_face(face)
+            box, landmarks, confidence = face_detector.object_parser(face)
             color = (0, 0, 255)
             thickness = 2
-            cv2.rectangle(image, box, color, thickness, cv2.LINE_AA)
+            cv2.rectangle(img, box, color, thickness, cv2.LINE_AA)
 
             # landmark（right_eye, left_eye, nose, right corner of the mouth, left corner of the mouth）
             for landmark in landmarks:
                 radius = 5
                 thickness = -1
-                cv2.circle(image, landmark, radius, color, thickness, cv2.LINE_AA)
+                cv2.circle(img, landmark, radius, color, thickness, cv2.LINE_AA)
 
             confidence_str = f"{confidence:.2f}"
             position = (box[0], box[1] - 10)
@@ -57,10 +57,10 @@ def main():
             scale = 0.5
             thickness = 2
             cv2.putText(
-                image, confidence_str, position, font, scale, color, thickness, cv2.LINE_AA
+                img, confidence_str, position, font, scale, color, thickness, cv2.LINE_AA
             )
 
-        cv2.imshow("face detection", image)
+        cv2.imshow("face detection", img)
         key = cv2.waitKey(10)
         if key == ord("q"):
             break
