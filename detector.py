@@ -57,7 +57,14 @@ def main():
             scale = 0.5
             thickness = 2
             cv2.putText(
-                img, confidence_str, position, font, scale, color, thickness, cv2.LINE_AA
+                img,
+                confidence_str,
+                position,
+                font,
+                scale,
+                color,
+                thickness,
+                cv2.LINE_AA,
             )
 
         cv2.imshow("face detection", img)

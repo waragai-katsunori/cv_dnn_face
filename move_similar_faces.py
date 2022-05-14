@@ -15,11 +15,13 @@ face_detector = YunetFaceDetector()
 def slim_by_distance(target_dir: Path, dst_dir: Path, th: float, recursive=False):
     if recursive:
         names = sorted(
-            list([p for p in target_dir.glob("**/*.png")]) + list([p for p in target_dir.glob("**/*.jpg")])
+            list([p for p in target_dir.glob("**/*.png")])
+            + list([p for p in target_dir.glob("**/*.jpg")])
         )
     else:
         names = sorted(
-            list([p for p in target_dir.glob("*.png")]) + list([p for p in target_dir.glob("*.jpg")])
+            list([p for p in target_dir.glob("*.png")])
+            + list([p for p in target_dir.glob("*.jpg")])
         )  # random.shuffle(names)
     name_list = []
     encodings_list = []

@@ -7,6 +7,7 @@ import cv2
 BASE_DIR = Path(__file__).parent
 from cv_dnn_face import YunetFaceDetector
 
+
 def main():
     parser = argparse.ArgumentParser("generate aligned face images from an image")
     parser.add_argument("image", help="input image file path (./image.jpg)")

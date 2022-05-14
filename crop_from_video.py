@@ -37,7 +37,9 @@ if __name__ == "__main__":
                 box, landmarks, confidence = face_detector.object_parser(face)
                 x, y, w, h = box
                 top, right, bottom, left = y, x + w, y + h, x
-                top, right, bottom, left = enlarge(top, right, bottom, left, frame.shape)
+                top, right, bottom, left = enlarge(
+                    top, right, bottom, left, frame.shape
+                )
                 counter += 1
                 top, right, bottom, left = enlarge(
                     top, right, bottom, left, frame.shape
