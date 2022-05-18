@@ -47,18 +47,18 @@ class YunetFaceDetector:
     def object_parser(self, obj):
         return _parse_yunet_face(obj)
 
-    def alignCrop(self, img, face):
+    def alignCrop(self, img: np.ndarray, face) -> np.ndarray:
         return self.face_recognizer.alignCrop(img, face)
 
-    def get_feature(self, img, face):
+    def get_feature(self, img: np.ndarray, face) -> np.ndarray:
         aligned_face = self.face_recognizer.alignCrop(img, face)
         return self.face_recognizer.feature(aligned_face)
 
-    def match(self, feature1, feature2):
+    def match(self, feature1: np.ndarray, feature2: np.ndarray) -> float:
         score = self.face_recognizer.match(feature1, feature2, cv2.FaceRecognizerSF_FR_COSINE)
         return score
 
-    def search(self, feature1: np.ndarray, face_db: np.ndarray):
+    def search(self, feature1: np.ndarray, face_db: np.ndarray) -> Tuple[bool, Tuple[str, float]]:
         """
         return isSamePerson, (user_id_string, score)
         """
