@@ -1,0 +1,4 @@
+Locate onnx model file here.
+
+face_recognizer_fast.onnx
+yunet.onnx
