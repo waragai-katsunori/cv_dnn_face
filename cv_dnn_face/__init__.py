@@ -13,14 +13,9 @@ RECOG_WEIGHTS = BASE_DIR / "model" / "face_recognizer_fast.onnx"
 COSINE_THRESHOLD = 0.363
 NORML2_THRESHOLD = 1.128
 
-
-def _parse_yunet_face(face):
-    bbox = [int(a) for a in face[0:4]]
-    landmarks = [int(a) for a in face[4:14]]
-    landmarks = np.array_split(landmarks, len(landmarks) / 2)
-    confidence = face[14]
-    return bbox, landmarks, confidence
-
+class InitalizeFailedException(Exception):
+    def __init__(self, arg=""):
+        self.arg = arg
 
 @dataclass
 class YunetFaceDetector:
@@ -39,7 +34,7 @@ class YunetFaceDetector:
         else:
             print(f"error: missing {self.detect_weights}")
             print("Please download model onnx files")
-            exit()
+            raise InitalizeFailedException
 
     def detect(self, img: np.ndarray):
         img = as_bgr(img)
@@ -72,6 +67,14 @@ class YunetFaceDetector:
             if score > COSINE_THRESHOLD:
                 return True, (user_id, score)
         return False, ("", 0.0)
+
+
+def _parse_yunet_face(face):
+    bbox = [int(a) for a in face[0:4]]
+    landmarks = [int(a) for a in face[4:14]]
+    landmarks = np.array_split(landmarks, len(landmarks) / 2)
+    confidence = face[14]
+    return bbox, landmarks, confidence
 
 
 def as_bgr(img: np.ndarray) -> np.ndarray:
