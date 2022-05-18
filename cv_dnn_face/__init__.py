@@ -12,6 +12,7 @@ RECOG_WEIGHTS = BASE_DIR / "model" / "face_recognizer_fast.onnx"
 COSINE_THRESHOLD = 0.363
 NORML2_THRESHOLD = 1.128
 
+
 class InitalizeFailedException(Exception):
     def __init__(self, arg=""):
         self.arg = arg
@@ -23,6 +24,7 @@ class YunetFaceDetector:
     cv2.FaceRecognizerSF
     base face recognition
     """
+
     def __init__(self):
         if not DETECT_WEIGHTS.is_file():
             print(f"error: missing {DETECT_WEIGHTS}")
@@ -36,16 +38,18 @@ class YunetFaceDetector:
         self.face_detector = cv2.FaceDetectorYN.create(str(DETECT_WEIGHTS), "", (0, 0))
         self.face_recognizer = cv2.FaceRecognizerSF_create(str(RECOG_WEIGHTS), "")
 
-
     def detect(self, img: np.ndarray):
+        """
+        -> retval, faces
+        """
         img = as_bgr(img)
-        height, width, _ = img.shape
+        height, width = img.shape[:2]
         self.face_detector.setInputSize((width, height))
 
         return self.face_detector.detect(img)
 
-    def object_parser(self, obj):
-        return _parse_yunet_face(obj)
+    def object_parser(self, face):
+        return _parse_yunet_face(face)
 
     def alignCrop(self, img: np.ndarray, face) -> np.ndarray:
         return self.face_recognizer.alignCrop(img, face)
@@ -55,16 +59,22 @@ class YunetFaceDetector:
         return self.face_recognizer.feature(aligned_face)
 
     def match(self, feature1: np.ndarray, feature2: np.ndarray) -> float:
-        score = self.face_recognizer.match(feature1, feature2, cv2.FaceRecognizerSF_FR_COSINE)
+        score = self.face_recognizer.match(
+            feature1, feature2, cv2.FaceRecognizerSF_FR_COSINE
+        )
         return score
 
-    def search(self, feature1: np.ndarray, face_db: np.ndarray) -> Tuple[bool, Tuple[str, float]]:
+    def search(
+        self, feature1: np.ndarray, face_db: np.ndarray
+    ) -> Tuple[bool, Tuple[str, float]]:
         """
         return isSamePerson, (user_id_string, score)
         """
         for element in face_db:
             user_id, feature2 = element
-            score = self.face_recognizer.match(feature1, feature2, cv2.FaceRecognizerSF_FR_COSINE)
+            score = self.face_recognizer.match(
+                feature1, feature2, cv2.FaceRecognizerSF_FR_COSINE
+            )
             if score > COSINE_THRESHOLD:
                 return True, (user_id, score)
         return False, ("", 0.0)
@@ -87,7 +97,9 @@ def as_bgr(img: np.ndarray) -> np.ndarray:
     return img
 
 
-def enlarge(top: int, right: int, bottom: int, left: int, shape: Tuple[int, int]) -> Tuple[int, int, int, int]:
+def enlarge(
+    top: int, right: int, bottom: int, left: int, shape: Tuple[int, int]
+) -> Tuple[int, int, int, int]:
     """
     returns enlarged region.
     [top, right, bottom, left]
