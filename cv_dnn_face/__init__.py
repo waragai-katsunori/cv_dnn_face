@@ -1,6 +1,5 @@
 from pathlib import Path
 from typing import Tuple, List
-from dataclasses import dataclass
 
 import cv2
 import numpy as np
@@ -17,24 +16,26 @@ class InitalizeFailedException(Exception):
     def __init__(self, arg=""):
         self.arg = arg
 
-@dataclass
+
 class YunetFaceDetector:
     """
     cv2.FaceDetectorYN
     cv2.FaceRecognizerSF
     base face recognition
     """
-    detect_weights = DETECT_WEIGHTS
-
-    def __post_init__(self):
-        if self.detect_weights.is_file():
-            self.face_detector = cv2.FaceDetectorYN.create(str(self.detect_weights), "", (0, 0))
-            self.face_recognizer = cv2.FaceRecognizerSF_create(str(RECOG_WEIGHTS), "")
-
-        else:
-            print(f"error: missing {self.detect_weights}")
+    def __init__(self):
+        if not DETECT_WEIGHTS.is_file():
+            print(f"error: missing {DETECT_WEIGHTS}")
             print("Please download model onnx files")
             raise InitalizeFailedException
+        if not RECOG_WEIGHTS.is_file():
+            print(f"error: missing {RECOG_WEIGHTS}")
+            print("Please download model onnx files")
+            raise InitalizeFailedException
+
+        self.face_detector = cv2.FaceDetectorYN.create(str(DETECT_WEIGHTS), "", (0, 0))
+        self.face_recognizer = cv2.FaceRecognizerSF_create(str(RECOG_WEIGHTS), "")
+
 
     def detect(self, img: np.ndarray):
         img = as_bgr(img)
