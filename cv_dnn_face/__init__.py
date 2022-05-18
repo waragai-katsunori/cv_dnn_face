@@ -24,6 +24,11 @@ def _parse_yunet_face(face):
 
 @dataclass
 class YunetFaceDetector:
+    """
+    cv2.FaceDetectorYN
+    cv2.FaceRecognizerSF
+    base face recognition
+    """
     detect_weights = DETECT_WEIGHTS
 
     def __post_init__(self):
