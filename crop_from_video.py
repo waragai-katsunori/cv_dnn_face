@@ -1,8 +1,10 @@
 from pathlib import Path
 import cv2
 
-from common import enlarge
-from crop import yunet_face_locations
+from cv_dnn_face import enlarge, YunetFaceDetector
+
+global yunet_face_detector
+face_detector = YunetFaceDetector()
 
 if __name__ == "__main__":
     import argparse
@@ -29,8 +31,15 @@ if __name__ == "__main__":
             break
         frame_num += 1
         if frame_num % interval == 0:
-            face_bounding_boxes = yunet_face_locations(frame)
-            for i, (top, right, bottom, left) in enumerate(face_bounding_boxes):
+            _, faces = face_detector.detect(frame)
+            faces = [] if faces is None else faces
+            for i, face in enumerate(faces):
+                box, landmarks, confidence = face_detector.object_parser(face)
+                x, y, w, h = box
+                top, right, bottom, left = y, x + w, y + h, x
+                top, right, bottom, left = enlarge(
+                    top, right, bottom, left, frame.shape
+                )
                 counter += 1
                 top, right, bottom, left = enlarge(
                     top, right, bottom, left, frame.shape

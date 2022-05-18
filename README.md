@@ -14,6 +14,13 @@ Download following onnx model files and locate in model direcory.
 model/yunet.onnx
 model/face_recognizer_fast.onnx
 
+## install
+
+```commandline
+$ python setup.py install
+```
+
+
 ## demo scripts
 ### detector.py
 

@@ -7,20 +7,21 @@ COSINE_THRESHOLD = 0.363
 NORML2_THRESHOLD = 1.128
 
 BASE_DIR = Path(__file__).parent
-from common import RECOG_WEIGHTS, YunetFaceDetector
+from cv_dnn_face import YunetFaceDetector
 
 face_detector = YunetFaceDetector()
-face_recognizer = cv2.FaceRecognizerSF_create(str(RECOG_WEIGHTS), "")
 
 
 def slim_by_distance(target_dir: Path, dst_dir: Path, th: float, recursive=False):
     if recursive:
         names = sorted(
-            list(target_dir.glob("**/*.png")) + list(target_dir.glob("**/*.jpg"))
+            list([p for p in target_dir.glob("**/*.png")])
+            + list([p for p in target_dir.glob("**/*.jpg")])
         )
     else:
         names = sorted(
-            list(target_dir.glob("*.png")) + list(target_dir.glob("*.jpg"))
+            list([p for p in target_dir.glob("*.png")])
+            + list([p for p in target_dir.glob("*.jpg")])
         )  # random.shuffle(names)
     name_list = []
     encodings_list = []
@@ -34,14 +35,11 @@ def slim_by_distance(target_dir: Path, dst_dir: Path, th: float, recursive=False
             result, faces = face_detector.detect(img)
             faces = faces if faces is not None else []
 
-            encs = [
-                face_recognizer.feature(face_recognizer.alignCrop(img, face))
-                for face in faces
-            ]
+            encs = [face_detector.get_feature(img, face) for face in faces]
             #    print(encs)
             if encs:
                 print(encs[0].shape)
-                dist = [1.0 - face_recognizer.match(e, encs[0]) for e in encodings_list]
+                dist = [1.0 - face_detector.match(e, encs[0]) for e in encodings_list]
                 print(p, len(dist) * "*")
                 if len(dist) == 0:
                     encodings_list.append(encs[0])

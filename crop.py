@@ -5,16 +5,10 @@ import numpy as np
 
 
 BASE_DIR = Path(__file__).parent
-from common import enlarge, parse_yunet_faces, YunetFaceDetector, as_top_right_bottom_left
+from cv_dnn_face import enlarge, YunetFaceDetector
 
 global yunet_face_detector
-yunet_face_detector = YunetFaceDetector()
-
-
-def yunet_face_locations(image: np.ndarray):
-    _, faces = yunet_face_detector.detect(image)
-    bboxes, landmarks, confidences = parse_yunet_faces(faces)
-    return as_top_right_bottom_left(bboxes)
+face_detector = YunetFaceDetector()
 
 
 def face_crop(src_dir: Path, dst_dir: Path, clockwise=False, recursive=True):
@@ -31,16 +25,19 @@ def face_crop(src_dir: Path, dst_dir: Path, clockwise=False, recursive=True):
     else:
         names = sorted((list(src_dir.glob("*.jpg")) + list(src_dir.glob("*.png"))))
     for p in names:
+        print(p)
         img = cv2.imread(str(p))
         if clockwise:
             img = np.rot90(img, 3)
 
-        face_bounding_boxes = yunet_face_locations(img)
-
-        for i, (top, right, bottom, left) in enumerate(face_bounding_boxes):
+        _, faces = face_detector.detect(img)
+        for i, face in enumerate(faces):
+            box, landmarks, confidence = face_detector.object_parser(face)
+            x, y, w, h = box
+            top, right, bottom, left = y, x + w, y + h, x
             top, right, bottom, left = enlarge(top, right, bottom, left, img.shape)
             face = img[top:bottom, left:right, :]
-            print(top, right, bottom, left)
+            print(p, top, right, bottom, left)
             tmpname = dst_dir / p.relative_to(src_dir)
             dstname = tmpname.parent / f"{tmpname.stem}_{i}.jpg"
 
@@ -63,3 +60,4 @@ if __name__ == "__main__":
     clockwise = args.clockwise
     print(src_dir, dst_dir, clockwise)
     face_crop(src_dir, dst_dir, clockwise=clockwise)
+    print(f"saved to {dst_dir}")
