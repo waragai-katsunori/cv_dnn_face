@@ -76,9 +76,9 @@ def test_detection_feature(p, num_faces):
         print(feature.shape)
 
 conditions = [
-        ["image/biden.jpg", 1],
-        ["image/obama.jpg", 1],
-        ["image/trump.jpg", 1],
+        ["image/biden/biden.jpg", 1],
+        ["image/obama/obama.jpg", 1],
+        ["image/trump/trump.jpg", 1],
     ]
 
 
