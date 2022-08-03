@@ -1,12 +1,12 @@
 # cv_dnn_face
-Sample scripts using OpenCV DNN based face detection and recogniton.
+Sample scripts using OpenCV DNN based face detection and recognition.
 
 ## Environment
 - Ubuntu 20.04.4 LTS
 - Python 3.8.10
 
 ## requirements
-- opencv-python >= 4.5.4 (checked with 4.5.4)
+- opencv-contrib-python==4.5.4.60 (checked with 4.5.4)
 - numpy
 
 ## model files
