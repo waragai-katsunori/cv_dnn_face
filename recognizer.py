@@ -86,9 +86,7 @@ def main():
             position = (box[0], box[1] - 10)
             font = cv2.FONT_HERSHEY_SIMPLEX
             scale = 0.6
-            cv2.putText(
-                img, text, position, font, scale, color, thickness, cv2.LINE_AA
-            )
+            cv2.putText(img, text, position, font, scale, color, thickness, cv2.LINE_AA)
 
         font = cv2.FONT_HERSHEY_SIMPLEX
         cv2.putText(
