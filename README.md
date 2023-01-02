@@ -141,8 +141,8 @@ biden.npy means label is biden.
 
 ## Download
 --------
-[yunet.onnx](https://github.com/ShiqiYu/libfacedetection.train/blob/master/tasks/task1/onnx/yunet.onnx)
-[face_recognizer_fast.onnx](https://drive.google.com/file/d/1ClK9WiB492c5OZFKveF3XiHCejoOxINW/view?usp=sharing)
+- [yunet.onnx](https://github.com/opencv/opencv_zoo/blob/master/models/face_detection_yunet/face_detection_yunet_2022mar.onnx)
+- [face_recognizer_fast.onnx](https://drive.google.com/file/d/1ClK9WiB492c5OZFKveF3XiHCejoOxINW/view?usp=sharing)
 
 ## SeeAlso
 https://github.com/opencv/opencv/blob/4.x/samples/dnn/README.md
