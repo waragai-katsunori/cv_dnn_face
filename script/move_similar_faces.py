@@ -53,9 +53,7 @@ def slim_by_distance(target_dir: Path, dst_dir: Path, th: float, recursive=False
             encs = [face_detector.get_feature(img, face) for face in faces]
             #    print(encs)
             if encs:
-                print(encs[0].shape)
                 dist = [1.0 - face_detector.match(e, encs[0]) for e in encodings_list]
-                print(p, len(dist) * "*")
                 if len(dist) == 0:
                     encodings_list.append(encs[0])
                     name_list.append(p)
