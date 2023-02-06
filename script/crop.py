@@ -40,7 +40,6 @@ def face_crop(src_dir: Path, dst_dir: Path, clockwise=False, recursive=True):
             print(p, top, right, bottom, left)
             tmpname = dst_dir / p.relative_to(src_dir)
             dstname = tmpname.parent / f"{tmpname.stem}_{i}.jpg"
-
             dstname.parent.mkdir(exist_ok=True, parents=True)
             cv2.imwrite(str(dstname), face)
 
@@ -53,10 +52,15 @@ if __name__ == "__main__":
     parser.add_argument(
         "--clockwise", action="store_true", help="rotate image clockwize"
     )
+    parser.add_argument("--dst_dir", default=None, help="destination dir")
     args = parser.parse_args()
 
     src_dir = Path(args.dir)
-    dst_dir = src_dir.parent / f"{src_dir.name}_crop"
+    if args.dst_dir:
+        dst_dir = Path(args.dst_dir)
+    else:
+        dst_dir = src_dir.parent / f"{src_dir.name}_crop"
+    dst_dir.mkdir(exist_ok=True)
     clockwise = args.clockwise
     print(src_dir, dst_dir, clockwise)
     face_crop(src_dir, dst_dir, clockwise=clockwise)
