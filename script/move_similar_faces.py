@@ -1,3 +1,7 @@
+"""
+類似画像を別のフォルダに移動するツール。
+類似画像の判定は、このライブラリの顔照合モデルを使用している。
+"""
 from pathlib import Path
 import shutil
 
@@ -13,6 +17,19 @@ face_detector = YunetFaceDetector()
 
 
 def slim_by_distance(target_dir: Path, dst_dir: Path, th: float, recursive=False):
+    """
+    顔画像の類似度が一定値以上(=顔画像の距離が一定位置以下）の画像をtarget_dirから dst_dir に移動する。
+
+    Parameters:
+    target_dir: Path
+        元画像のあるフォルダ
+    dst_dir: Path
+        類似画像の移動先のフォルダ
+    th: float
+        しきい値の距離
+    recursive: bool
+        target_dirのフォルダを再帰的に探索するかどうか。
+    """
     if recursive:
         names = sorted(
             list([p for p in target_dir.glob("**/*.png")]) + list([p for p in target_dir.glob("**/*.jpg")])
@@ -57,7 +74,7 @@ def slim_by_distance(target_dir: Path, dst_dir: Path, th: float, recursive=False
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(description="face cropper from images.")
+    parser = argparse.ArgumentParser(description="move similar images src_dir to dst_dir")
     parser.add_argument("src_dir", help="image source dir")
     parser.add_argument("dst_dir", help="destination dir")
     parser.add_argument(
