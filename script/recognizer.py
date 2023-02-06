@@ -4,8 +4,11 @@ import numpy as np
 import cv2
 
 
-BASE_DIR = Path(__file__).parent
 from cv_dnn_face import YunetFaceDetector
+
+
+BASE_DIR = Path(__file__).parent.parent
+assert BASE_DIR.is_dir()
 
 
 def main():
